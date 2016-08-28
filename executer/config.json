@@ -1,0 +1,5 @@
+{
+	"startScript":"startservice.sh",
+	"stopScript":"stopservice.sh",
+	"SecurityKey":"passw0rd"
+}
