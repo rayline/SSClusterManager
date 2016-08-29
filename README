@@ -27,6 +27,7 @@ The executer runs the Shadowsocks instances, with user information (name, port, 
 
 + Shadowsocks will use aes-256-cfb as cipher
 + One-time authentication should be enabled
++ default port of executer is 41600
 
 ## System requirement
 

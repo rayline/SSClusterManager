@@ -12,7 +12,7 @@ import "sync"
 
 type user UserType.User
 
-const filename = "usefr.db"
+const filename = "user.db"
 
 var users = map[string]user{}
 var mutex sync.RWMutex
@@ -20,6 +20,9 @@ var mutex sync.RWMutex
 func init() {
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
+		if os.IsNotExist(err) {
+			return
+		}
 		log.Fatalln("Reading user database file:", err)
 	}
 	err = json.Unmarshal(data, &users)
