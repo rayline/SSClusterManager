@@ -38,7 +38,7 @@ func setupControllers() {
 	controllerMux.HandleFunc("/deluser", DelUserController)
 }
 
-// /adduser POST adds a user to the executer
+// /write POST adds a user to the executer
 // name :the user name
 // password :the user password
 // port :the port the user is supposed to use

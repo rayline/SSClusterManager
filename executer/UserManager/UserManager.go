@@ -16,7 +16,7 @@ func init() {
 }
 
 func WriteUser(u User) {
-	previousU, exist := DB.Get(name)
+	previousU, exist := DB.Get(u.Name)
 	if exist {
 		ServiceManager.StopService(previousU.Port)
 	}
