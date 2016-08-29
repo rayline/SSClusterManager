@@ -1,4 +1,4 @@
-+ /adduser adds a user to the executer
++ /writeuser adds or rewrites a user to the executer
 	- name (used as the identifier)
 	- port
 	- password

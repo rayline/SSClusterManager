@@ -34,7 +34,7 @@ func securityController(w http.ResponseWriter, r *http.Request) {
 }
 
 func setupControllers() {
-	controllerMux.HandleFunc("/adduser", AddUserController)
+	controllerMux.HandleFunc("/writeuser", WriteUserController)
 	controllerMux.HandleFunc("/deluser", DelUserController)
 }
 
@@ -42,7 +42,7 @@ func setupControllers() {
 // name :the user name
 // password :the user password
 // port :the port the user is supposed to use
-func AddUserController(w http.ResponseWriter, r *http.Request) {
+func WriteUserController(w http.ResponseWriter, r *http.Request) {
 	name := r.FormValue("name")
 	password := r.FormValue("password")
 	portStr := r.FormValue("port")
@@ -51,7 +51,7 @@ func AddUserController(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 	}
 	port := uint16(port64)
-	UserManager.AddUser(UserManager.User{
+	UserManager.WriteUser(UserManager.User{
 		Port:     port,
 		Name:     name,
 		Password: password,

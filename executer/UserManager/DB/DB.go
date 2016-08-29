@@ -50,11 +50,12 @@ func GetAll() []UserType.User {
 	return v
 }
 
-func Get(UserName string) UserType.User {
+func Get(UserName string) (UserType.User, bool) {
 	mutex.RLock()
 	defer mutex.RUnlock()
 
-	return UserType.User(users[UserName])
+	u, exist := users[UserName]
+	return UserType.User(u), exist
 }
 
 func Del(UserName string) {

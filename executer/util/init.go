@@ -10,6 +10,7 @@ var Configs map[string]interface{}
 const LogDirecotry = "log/"
 
 func init() {
+	os.Mkdir(LogDirecotry, os.ModePerm)
 	LogFileName = time.Now().Format(time.RFC3339) + ".log"
 	w, err := os.OpenFile(LogDirecotry+LogFileName, os.O_WRONLY|os.O_CREATE, os.ModePerm)
 	if err != nil {

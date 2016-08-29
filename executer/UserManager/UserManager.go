@@ -15,12 +15,20 @@ func init() {
 	}
 }
 
-func AddUser(u User) {
+func WriteUser(u User) {
+	previousU, exist := DB.Get(name)
+	if exist {
+		ServiceManager.StopService(previousU.Port)
+	}
 	DB.Add(UserType.User(u))
 	ServiceManager.StartService(u.Port, u.Password)
 }
 
 func DelUser(name string) {
-	ServiceManager.StopService(DB.Get(name).Port)
+	u, exist := DB.Get(name)
+	if !exist {
+		return
+	}
+	ServiceManager.StopService(u.Port)
 	DB.Del(name)
 }

@@ -1,2 +1,4 @@
 *.sublime-project
 SSClusterManager.sublime-workspace
+*.exe
+*.log
