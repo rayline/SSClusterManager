@@ -37,10 +37,10 @@ func StartService(port uint16, password string) {
 
 func StopService(port uint16) {
 	log.Print("Stopping service on ", port, "...")
-	scriptNameInterface, exist := util.Configs["startScript"]
+	scriptNameInterface, exist := util.Configs["stopScript"]
 	scriptName := ""
 	if exist == false {
-		scriptName = "startscript.sh"
+		scriptName = "stopscript.sh"
 	} else {
 		scriptName = scriptNameInterface.(string)
 	}
