@@ -1,3 +1,3 @@
 #!/bin/bash
 
-$GOPATH/src/SSClusterManager/executer/executer
+nohup $GOPATH/src/SSClusterManager/executer/executer > init.log 2>&1 &

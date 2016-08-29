@@ -7,9 +7,11 @@ import "log"
 var LogFileName string
 var Configs map[string]interface{}
 
+const LogDirecotry = "log/"
+
 func init() {
 	LogFileName = time.Now().Format(time.RFC3339) + ".log"
-	w, err := os.OpenFile(LogFileName, os.O_WRONLY|os.O_CREATE, os.ModePerm)
+	w, err := os.OpenFile(LogDirecotry+LogFileName, os.O_WRONLY|os.O_CREATE, os.ModePerm)
 	if err != nil {
 		log.Fatalln("Failed to create log file", err, "...Exiting")
 	}

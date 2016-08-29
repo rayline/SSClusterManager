@@ -19,8 +19,8 @@ import "strconv"
 //At this version the program will not try to handle any error from the scripts
 
 func StartService(port uint16, password string) {
-	log.Print("Starting service on", port, "...")
-	scriptNameInterface, exist := util.Configs["startscript"]
+	log.Print("Starting service on ", port, "...")
+	scriptNameInterface, exist := util.Configs["startScript"]
 	scriptName := ""
 	if exist == false {
 		scriptName = "startscript.sh"
@@ -36,8 +36,8 @@ func StartService(port uint16, password string) {
 }
 
 func StopService(port uint16) {
-	log.Print("Stopping service on", port, "...")
-	scriptNameInterface, exist := util.Configs["startscript"]
+	log.Print("Stopping service on ", port, "...")
+	scriptNameInterface, exist := util.Configs["startScript"]
 	scriptName := ""
 	if exist == false {
 		scriptName = "startscript.sh"
