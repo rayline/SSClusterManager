@@ -4,6 +4,5 @@ package UserType
 
 type User struct {
 	Port     uint16
-	Name     string
 	Password string
 }

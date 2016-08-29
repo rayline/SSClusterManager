@@ -14,7 +14,7 @@ type user UserType.User
 
 const filename = "user.db"
 
-var users = map[string]user{}
+var users = map[uint16]user{}
 var mutex sync.RWMutex
 
 func init() {
@@ -36,7 +36,7 @@ func Add(u UserType.User) {
 	defer mutex.Unlock()
 	defer save()
 
-	users[u.Name] = user(u)
+	users[u.Port] = user(u)
 }
 
 func GetAll() []UserType.User {
@@ -50,20 +50,20 @@ func GetAll() []UserType.User {
 	return v
 }
 
-func Get(UserName string) (UserType.User, bool) {
+func Get(UserPort uint16) (UserType.User, bool) {
 	mutex.RLock()
 	defer mutex.RUnlock()
 
-	u, exist := users[UserName]
+	u, exist := users[UserPort]
 	return UserType.User(u), exist
 }
 
-func Del(UserName string) {
+func Del(UserPort uint16) {
 	mutex.Lock()
 	defer mutex.Unlock()
 	defer save()
 
-	delete(users, UserName)
+	delete(users, UserPort)
 }
 
 func save() {

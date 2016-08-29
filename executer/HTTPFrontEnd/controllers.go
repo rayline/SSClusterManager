@@ -43,26 +43,31 @@ func setupControllers() {
 // password :the user password
 // port :the port the user is supposed to use
 func WriteUserController(w http.ResponseWriter, r *http.Request) {
-	name := r.FormValue("name")
 	password := r.FormValue("password")
 	portStr := r.FormValue("port")
 	port64, err := strconv.ParseUint(portStr, 10, 16)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 	port := uint16(port64)
 	UserManager.WriteUser(UserManager.User{
 		Port:     port,
-		Name:     name,
 		Password: password,
 	})
 	w.WriteHeader(http.StatusOK)
 }
 
 // /deluser POST deletes a user from the executer
-// name :the user name
+// port :the port of service
 func DelUserController(w http.ResponseWriter, r *http.Request) {
-	name := r.FormValue("name")
-	UserManager.DelUser(name)
+	portStr := r.FormValue("port")
+	port64, err := strconv.ParseUint(portStr, 10, 16)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	port := uint16(port64)
+	UserManager.DelUser(port)
 	w.WriteHeader(http.StatusOK)
 }
