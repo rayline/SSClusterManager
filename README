@@ -23,6 +23,11 @@ Shadowsocks Cluster Manager is an application intending to create and maintain S
 The director should run on a server. Configured with HTTP interface, it creats server from server provider, on which director system is automatically installed and configured. Users of the service should also be configured through HTTP, whose information include port and password. At this version the authentication of the user interface is only a pre-shared key in the HTTP header. There should be TLS for the interface if possible. 
 The executer runs the Shadowsocks instances, with user information (name, port, password) sent from the director. It should run an alternable script to start Shadowsocks. The implemention of Shadowsocks should not be limited, as long as it works well when multiple instances run well on different ports. The config information from director should be stored locally in case of a restart.
 
+## Conventions
+
++ Shadowsocks will use aes-256-cfb as cipher
++ One-time authentication should be enabled
+
 ## System requirement
 
 Ubuntu 16 x64
