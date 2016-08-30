@@ -31,4 +31,13 @@ go build
 
 cp scripts/startexecuter.sh /etc/init.d 
 
+#specially add kcptun installation
+# NOTE: not compile installation so the script may need to be updated when kcptun updates, and no good solution before its upload to apt source
+mkdir kcptun
+cd kcptun
+wget https://github.com/xtaci/kcptun/releases/download/v20160830/kcptun-linux-amd64-20160830.tar.gz
+tar -zxvf kcptun-linux-amd64-20160830.tar.gz
+cd ..
+
+
 scripts/startexecuter.sh
