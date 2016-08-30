@@ -1,4 +1,5 @@
 #!/bin/bash
 
 lsof -i :$1 | grep LISTEN | cut -f 2 -d ' ' | xargs kill
-nohup ss-server -p $1 -k $2 -m aes-256-cfb -u -A --fast-open > /dev/null 2>&1 &
+nohup kcptun/server_linux_amd64 -l :$1 -t 127.0.0.1:$1 --crypt chacha20 --key $2 --mtu 1200 --nocomp --mode fast2 --dscp 46 &
+nohup ss-server -p $1 -k $2 -m chacha20 -A --fast-open > /dev/null 2>&1 &

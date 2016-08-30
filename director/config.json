@@ -1,0 +1,4 @@
+{
+	"staticFileServerPort":"80",
+	"staticFilePath":"static"
+}

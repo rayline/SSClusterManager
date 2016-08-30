@@ -25,9 +25,11 @@ The executer runs the Shadowsocks instances, with user information (name, port, 
 
 ## Conventions
 
-+ Shadowsocks will use aes-256-cfb as cipher
++ Shadowsocks will use chacha20 as cipher
 + One-time authentication should be enabled
 + default port of executer is 41600
++ default port of director api is 8080
++ default port of director interface is 80
 
 ## System requirement
 
