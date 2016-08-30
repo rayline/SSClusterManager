@@ -16,6 +16,7 @@ sudo dpkg -i shadowsocks-libev*.deb
 
 #installing Executer of SSClusterManager
 
+killall executer
 rm -rf ./SSClusterManager
 git clone https://github.com/rayline/SSClusterManager.git
 
@@ -24,7 +25,7 @@ chmod +x SSClusterManager/executer/scripts/*
 SSClusterManager/executer/scripts/golanginstall.sh --64
 source ~/.bashrc
 
-cp -r SSClusterManager $GOPATH/src 
+cp -rf SSClusterManager $GOPATH/src 
 cd $GOPATH/src/SSClusterManager/executer 
 
 go build
