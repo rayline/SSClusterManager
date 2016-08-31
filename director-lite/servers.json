@@ -1,0 +1,18 @@
+[
+	{
+		"Server": "45.32.21.204",
+		"Server_port": 41620,
+		"Password": "GO0dBAdPassw0rD",
+		"Method": "chacha20",
+		"Remarks": "",
+		"Auth": true
+	},
+	{
+		"Server": "2001:19f0:7001:356:5400:ff:fe33:7ca2",
+		"Server_port": 41620,
+		"Password": "GO0dBAdPassw0rD",
+		"Method": "chacha20",
+		"Remarks": "",
+		"Auth": true
+	}
+]

@@ -1,0 +1,8 @@
+{
+	"staticFileServerPort":"80",
+	"staticFilePath":"static",
+	"port":"41620",
+	"password":"GO0dBAdPassw0rD",
+	"serverCnt":1,
+	"SecurityKey":"passw0rd"
+}
