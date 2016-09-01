@@ -26,13 +26,17 @@ git clone https://github.com/rayline/SSClusterManager.git
 chmod +x SSClusterManager/executer/scripts/*
 
 SSClusterManager/executer/scripts/golanginstall.sh --64
-source ~/.bashrc
+
+export GOROOT=$HOME/.go
+export PATH=$PATH:$GOROOT/bin
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
 
 #not using variable $GOPATH because of a possible bug in SSH
 cp -rf SSClusterManager ~/go/src 
 cd ~/go/src/SSClusterManager/executer 
 
-~/.go/bin/go build
+go build
 
 cp scripts/startexecuter.sh /etc/init.d 
 

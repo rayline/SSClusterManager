@@ -1,4 +1,4 @@
 #!/bin/bash
 
-pwd
-nohup ~/go/src/SSClusterManager/executer/executer > init.log 2> initerr.log &
+cd ~/go/src/SSClusterManager/executer
+nohup ./executer > init.log 2> initerr.log &

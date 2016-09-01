@@ -14,9 +14,9 @@ func MakeLogger(prefix string) gossh.Writer {
 }
 
 func main() {
-	client := gossh.New("45.32.250.194", "root")
+	client := gossh.New("45.63.120.170", "root")
 	// my default agent authentication is used. use
-	client.SetPassword("$P4yagFPHprCpFHx")
+	client.SetPassword("Nx)9X{rT(AP=]GMC")
 	// for password authentication
 	client.DebugWriter = MakeLogger("DEBUG")
 	client.InfoWriter = MakeLogger("INFO ")
@@ -24,7 +24,9 @@ func main() {
 
 	defer client.Close()
 
-	rsp, e := client.Execute("setsid ./installExecuter.sh")
+	rsp, e := client.Execute(`
+		source ~/.bashrc;
+		go --version`)
 	if e != nil {
 		client.ErrorWriter(e.Error())
 		client.ErrorWriter("STDOUT: " + rsp.Stdout())

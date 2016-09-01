@@ -50,7 +50,9 @@ func Available(s Server) bool {
 	if s.Status() != StateOK {
 		return false
 	}
-	if _, err := http.Get("http://" + s.Addr().String() + "/"); err != nil {
+	log.Println("Requesting ", "http://"+s.Addr().String()+":41600/", " to test HTTP server")
+	if _, err := http.Get("http://" + s.Addr().String() + ":41600/"); err != nil {
+		log.Println(err)
 		return false
 	}
 	return true
@@ -73,8 +75,6 @@ func Setup(s Server) {
 	}
 	log.Println("Remote ready for configuration, Using SSH to setup server")
 	o, err := sshClient.Execute(installScript)
-	log.Println(o.Stderr())
-	log.Println(o.Stdout())
 	if err != nil {
 		log.Println("Error executing ssh ", err, "With output :stderr: ", o.Stderr(), " , stdout: ", o.Stdout())
 	}
