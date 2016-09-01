@@ -29,8 +29,8 @@ SSClusterManager/executer/scripts/golanginstall.sh --64
 source ~/.bashrc
 
 #not using variable $GOPATH because of a possible bug in SSH
-cp -rf SSClusterManager ~/root/go/src 
-cd ~/root/go/src/SSClusterManager/executer 
+cp -rf SSClusterManager ~/go/src 
+cd ~/go/src/SSClusterManager/executer 
 
 go build
 
@@ -40,8 +40,9 @@ cp scripts/startexecuter.sh /etc/init.d
 # NOTE: not compile installation so the script may need to be updated when kcptun updates, and no good solution before its upload to apt source
 mkdir kcptun
 cd kcptun
+rm kcptun-linux-amd64-20160830.tar.gz
 wget https://github.com/xtaci/kcptun/releases/download/v20160830/kcptun-linux-amd64-20160830.tar.gz
 tar -zxvf kcptun-linux-amd64-20160830.tar.gz
 cd ..
 
-scripts/startexecuter.sh
+~/go/src/SSClusterManager/executer/scripts/startexecuter.sh
