@@ -1,3 +1,4 @@
 #!/bin/bash
 
-nohup $GOPATH/src/SSClusterManager/executer/executer > init.log 2> initerr.log &
+.source ~./bashrc
+nohup ~/go/src/SSClusterManager/executer/executer > init.log 2> initerr.log &
