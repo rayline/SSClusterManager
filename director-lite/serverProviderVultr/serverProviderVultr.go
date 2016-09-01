@@ -85,12 +85,18 @@ func (v *VultrServer) Do(uri string, data []byte) {
 	} else {
 		method = "POST"
 	}
-	req, _ := http.NewRequest(method, "http://"+v.IPv4.String()+uri, bytes.NewBuffer(data))
+	req, _ := http.NewRequest(method, "http://"+v.IPv4.String()+":41600"+uri, bytes.NewBuffer(data))
 	req.Header.Add("key", util.Configs["SecurityKey"].(string))
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	client := &http.Client{}
-	for _, err := client.Do(req); err != nil; _, err = client.Do(req) {
-		log.Println("Error accessing ", v.IPv4.String(), " ", err)
+	for resp, err := client.Do(req); err != nil || resp.StatusCode != 200; resp, err = client.Do(req) {
+		if err != nil {
+			log.Println("Error accessing ", v.IPv4.String(), " ", err)
+		} else {
+			log.Println("Server returned status code ", resp.Status)
+		}
 		time.Sleep(time.Second)
+		req, _ = http.NewRequest(method, "http://"+v.IPv4.String()+":41600"+uri, bytes.NewBuffer(data))
 	}
 }
 
