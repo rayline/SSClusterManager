@@ -31,6 +31,7 @@ func AddServer(s server.Server) {
 			server.WriteUser(s, util.Configs["password"].(string), util.Configs["port"].(string))
 		}()
 	} else {
+		log.Println("Server at ", s.Addr().String(), " good for service")
 		server.WriteUser(s, util.Configs["password"].(string), util.Configs["port"].(string))
 	}
 }

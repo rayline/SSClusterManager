@@ -16,6 +16,7 @@ import "net"
 import "time"
 import "bytes"
 import "os"
+import "github.com/dynport/gossh"
 
 var configFile = "vultr_config.json"
 var configs map[string]interface{}
@@ -87,19 +88,19 @@ func (v *VultrServer) Do(uri string, data []byte) {
 	req, _ := http.NewRequest(method, "http://"+v.IPv4.String()+uri, bytes.NewBuffer(data))
 	req.Header.Add("key", util.Configs["SecurityKey"].(string))
 	client := &http.Client{}
-	for _, err := client.Do(req); err != nil; {
+	for _, err := client.Do(req); err != nil; _, err = client.Do(req) {
 		log.Println("Error accessing ", v.IPv4.String(), " ", err)
 		time.Sleep(time.Second)
 	}
 }
 
 func (v *VultrServer) Status() int {
-	log.Println("Checking Server status")
+	//log.Println("Checking Server status")
 	req, err := http.NewRequest("GET", "https://api.vultr.com/v1/server/list?SUBID="+v.Subid, nil)
 	req.Header.Add("API-Key", apikey)
 	client := &http.Client{}
 	var resp *http.Response
-	for resp, err = client.Do(req); resp.StatusCode == 503 || err != nil; {
+	for resp, err = client.Do(req); resp.StatusCode == 503 || err != nil; resp, err = client.Do(req) {
 		if err != nil {
 			log.Println("Error access Vultr for new server : ", err)
 		} else {
@@ -113,7 +114,7 @@ func (v *VultrServer) Status() int {
 	respData, err := ioutil.ReadAll(resp.Body)
 	var serverList = map[string]interface{}{}
 	json.Unmarshal(respData, &serverList)
-	log.Println("Got status ", serverList["server_state"])
+	//log.Println("Got status ", serverList["server_state"])
 	if serverList["server_state"] == "ok" {
 		return server.StateOK
 	} else {
@@ -122,30 +123,55 @@ func (v *VultrServer) Status() int {
 }
 
 func (v *VultrServers) Create() server.Server {
-	log.Println("Creating Vultr Server...")
-	creationConfig := configs["creation"].(map[string]interface{})
-	var form = url.Values{}
-	for index, value := range creationConfig {
-		form.Add(index, value.(string))
-	}
-	respData := requestToVultr("/v1/server/create", "POST", []byte(form.Encode()))
-	var respFrom = map[string]string{}
-	json.Unmarshal(respData, &respFrom)
-	subid := respFrom["SUBID"]
-	var serverList = map[string]interface{}{}
-	var server *VultrServer
-	for p, ok := serverList["default_password"].(string); p == "" || ok == false; {
-		respData = requestToVultr("/v1/server/list?SUBID="+subid, "GET", nil)
-		json.Unmarshal(respData, &serverList)
+	var s server.Server
+	for goodServerCreated := false; goodServerCreated == false; {
+		log.Println("Creating Vultr Server...")
+		creationConfig := configs["creation"].(map[string]interface{})
+		var form = url.Values{}
+		for index, value := range creationConfig {
+			form.Add(index, value.(string))
+		}
+		respData := requestToVultr("/v1/server/create", "POST", []byte(form.Encode()))
+		var respFrom = map[string]string{}
+		json.Unmarshal(respData, &respFrom)
+		subid := respFrom["SUBID"]
+		var serverList = map[string]interface{}{}
+		var server *VultrServer
+		log.Println("Waiting for basic setup of server with SUBID ", subid)
+		for p, ok := serverList["default_password"].(string); p == "" || ok == false; p, ok = serverList["default_password"].(string) {
+			time.Sleep(time.Second * 2)
+			respData = requestToVultr("/v1/server/list?SUBID="+subid, "GET", nil)
+			json.Unmarshal(respData, &serverList)
+		}
+		log.Println("Retrieved basic information of server on : ", serverList["main_ip"].(string))
 		server = &VultrServer{
 			Subid:    subid,
 			Password: serverList["default_password"].(string),
 			IPv4:     net.ParseIP(serverList["main_ip"].(string)),
 			IPv6:     net.ParseIP(serverList["v6_main_ip"].(string)),
 		}
-		time.Sleep(time.Second * 2)
+
+		//We want a server that can be connected anyway
+		log.Println("Waiting for server to respond so we can know it is accessible from here")
+
+		sshClient := gossh.New(server.Addr().String(), "root")
+		defer sshClient.Close()
+		sshClient.SetPassword(server.RootPassword())
+
+		//We will wait five minutes until it respond or we will just destroy it and get a new one
+		startPoint := time.Now()
+		for _, err := sshClient.Execute("ls"); err != nil; _, err = sshClient.Execute("ls") {
+			time.Sleep(time.Second * 2)
+			if time.Now().Sub(startPoint) > time.Minute*5 {
+				log.Println("Server on ", server.Addr().String(), " seem never going to respond, destroying...")
+				server.Destroy()
+				continue
+			}
+		}
+		goodServerCreated = true
+		s = server
 	}
-	return server
+	return s
 }
 
 func requestToVultr(uri string, method string, data []byte) []byte {
@@ -161,11 +187,11 @@ func requestToVultr(uri string, method string, data []byte) []byte {
 	}
 
 	var resp *http.Response
-	for resp, err = client.Do(req); resp.StatusCode == 503 || err != nil; {
+	for resp, err = client.Do(req); resp.StatusCode == 503 || err != nil; resp, err = client.Do(req) {
 		if err != nil {
 			log.Println("Error access Vultr for new server : ", err)
 		} else {
-			log.Println("Accessing too fase...")
+			log.Println("Accessing too fast...")
 		}
 		time.Sleep(time.Second)
 	}

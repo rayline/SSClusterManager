@@ -14,5 +14,7 @@ func main() {
 
 	ioutil.WriteFile("servers.json", servers.JSON(), os.ModePerm)
 
-	time.Sleep(time.Minute * 5)
+	for {
+		time.Sleep(time.Hour)
+	}
 }

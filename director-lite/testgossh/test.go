@@ -14,25 +14,17 @@ func MakeLogger(prefix string) gossh.Writer {
 }
 
 func main() {
-	client := gossh.New("45.32.137.182", "root")
+	client := gossh.New("45.32.250.194", "root")
 	// my default agent authentication is used. use
-	client.SetPassword("F8*pBWa+J#QSc.NC")
+	client.SetPassword("$P4yagFPHprCpFHx")
 	// for password authentication
 	client.DebugWriter = MakeLogger("DEBUG")
 	client.InfoWriter = MakeLogger("INFO ")
 	client.ErrorWriter = MakeLogger("ERROR")
 
 	defer client.Close()
-	rsp, e := client.Execute("uptime")
-	if e != nil {
-		client.ErrorWriter(e.Error())
-	}
-	client.InfoWriter(rsp.String())
 
-	rsp, e = client.Execute(`mkdir ~/AAA
-mkdir ~/BBB
-mkdir ~/CCC
-		`)
+	rsp, e := client.Execute("setsid ./installExecuter.sh")
 	if e != nil {
 		client.ErrorWriter(e.Error())
 		client.ErrorWriter("STDOUT: " + rsp.Stdout())

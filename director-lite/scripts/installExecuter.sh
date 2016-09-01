@@ -28,9 +28,8 @@ chmod +x SSClusterManager/executer/scripts/*
 SSClusterManager/executer/scripts/golanginstall.sh --64
 source ~/.bashrc
 
-#not using variable $GOPATH because of a possible bug in SSH
-cp -rf SSClusterManager ~/root/go/src 
-cd ~/root/go/src/SSClusterManager/executer 
+cp -rf SSClusterManager $GOPATH/src 
+cd $GOPATH/src/SSClusterManager/executer 
 
 go build
 

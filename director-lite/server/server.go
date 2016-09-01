@@ -21,7 +21,7 @@ var installScript string
 
 func init() {
 	//cache the executer install script here
-	installScriptBytes, err := ioutil.ReadFile("scripts/installExecuter.sh")
+	installScriptBytes, err := ioutil.ReadFile("scripts/installExecuterRemote.sh")
 	if err != nil {
 		log.Fatalln("Error Reading executer install script", err)
 	}
@@ -57,21 +57,30 @@ func Available(s Server) bool {
 }
 
 func Setup(s Server) {
-	for state := s.Status(); state <= StateNotReady; {
+	log.Println("Wating for server to be active...")
+	for state := s.Status(); state <= StateNotReady; state = s.Status() {
 		if state == StateDestroyed {
 			return
 		}
-		time.Sleep(time.Second)
+		time.Sleep(time.Second * 2)
 	}
+	sshClient := gossh.New(s.Addr().String(), "root")
+	defer sshClient.Close()
+	sshClient.SetPassword(s.RootPassword())
+	log.Println("Waiting For remote SSH to be ready...")
+	for _, err := sshClient.Execute("ls"); err != nil; _, err = sshClient.Execute("ls") {
+		time.Sleep(time.Second * 2)
+	}
+	log.Println("Remote ready for configuration, Using SSH to setup server")
+	o, err := sshClient.Execute(installScript)
+	log.Println(o.Stderr())
+	log.Println(o.Stdout())
+	if err != nil {
+		log.Println("Error executing ssh ", err, "With output :stderr: ", o.Stderr(), " , stdout: ", o.Stdout())
+	}
+	log.Println("Waiting for installation of executer to complete...")
 	for !Available(s) {
-		log.Println("Using SSH to setup server")
-		sshClient := gossh.New(s.Addr().String(), "root")
-		defer sshClient.Close()
-		sshClient.SetPassword(s.RootPassword())
-		o, err := sshClient.Execute(installScript)
-		if err != nil {
-			log.Println("Error executing ssh ", err, "With output :stderr: ", o.Stderr(), " , stdout: ", o.Stdout())
-		}
+		time.Sleep(time.Second * 2)
 	}
 	log.Println("done setup on server on ", s.Addr().String())
 }
