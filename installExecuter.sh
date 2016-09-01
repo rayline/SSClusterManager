@@ -32,7 +32,7 @@ source ~/.bashrc
 cp -rf SSClusterManager ~/go/src 
 cd ~/go/src/SSClusterManager/executer 
 
-go build
+~/.go/bin/go build
 
 cp scripts/startexecuter.sh /etc/init.d 
 
