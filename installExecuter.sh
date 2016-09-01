@@ -38,6 +38,7 @@ cd ~/go/src/SSClusterManager/executer
 
 go build
 
+update-rc.d startexecuter.sh defaults
 cp scripts/startexecuter.sh /etc/init.d 
 
 #specially add kcptun installation
@@ -49,4 +50,13 @@ wget https://github.com/xtaci/kcptun/releases/download/v20160830/kcptun-linux-am
 tar -zxvf kcptun-linux-amd64-20160830.tar.gz
 cd ..
 
+
 scripts/startexecuter.sh
+
+
+#It will be more interesting if we add an PHP proxy so we can do more interesting things
+cd ~
+mkdir php-proxy
+wget https://raw.githubusercontent.com/Athlon1600/php-proxy-installer/master/install.sh
+chmod +x install.sh
+./install.sh

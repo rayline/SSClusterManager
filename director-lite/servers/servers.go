@@ -59,12 +59,12 @@ func CheckOutServerCount() {
 }
 
 type ssserver struct {
-	Server      string
-	Server_port uint16
-	Password    string
-	Method      string
-	Remarks     string
-	Auth        bool
+	Server      string `json:"server"`
+	Server_port uint16 `json:"server_port"`
+	Password    string `json:"password"`
+	Method      string `json:"method"`
+	Remarks     string `json:"remarks"`
+	Auth        bool   `json:"auth"`
 }
 
 var port uint16 = 0
@@ -97,6 +97,7 @@ func JSON() []byte {
 		ssservers = append(ssservers, newSSserver(s.AddrV6().String()))
 	}
 	data, err := json.MarshalIndent(ssservers, "", "	")
+	str = by
 	if err != nil {
 		log.Fatalln("Error encoding SS server list to JSON ", err)
 	}
