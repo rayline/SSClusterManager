@@ -45,4 +45,4 @@ wget https://github.com/xtaci/kcptun/releases/download/v20160830/kcptun-linux-am
 tar -zxvf kcptun-linux-amd64-20160830.tar.gz
 cd ..
 
-~/go/src/SSClusterManager/executer/scripts/startexecuter.sh
+scripts/startexecuter.sh

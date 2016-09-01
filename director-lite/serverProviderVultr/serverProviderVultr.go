@@ -100,7 +100,7 @@ func (v *VultrServer) Status() int {
 	req.Header.Add("API-Key", apikey)
 	client := &http.Client{}
 	var resp *http.Response
-	for resp, err = client.Do(req); resp.StatusCode == 503 || err != nil; resp, err = client.Do(req) {
+	for resp, err = client.Do(req); err != nil || resp.StatusCode == 503; resp, err = client.Do(req) {
 		if err != nil {
 			log.Println("Error access Vultr for new server : ", err)
 		} else {
