@@ -14,5 +14,21 @@
 		"Method": "chacha20",
 		"Remarks": "",
 		"Auth": true
+	},
+	{
+		"Server": "45.32.136.49",
+		"Server_port": 41620,
+		"Password": "GO0dBAdPassw0rD",
+		"Method": "chacha20",
+		"Remarks": "",
+		"Auth": true
+	},
+	{
+		"Server": "2001:19f0:ac01:1d2:5400:ff:fe33:a451",
+		"Server_port": 41620,
+		"Password": "GO0dBAdPassw0rD",
+		"Method": "chacha20",
+		"Remarks": "",
+		"Auth": true
 	}
 ]

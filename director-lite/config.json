@@ -3,6 +3,6 @@
 	"staticFilePath":"static",
 	"port":"41620",
 	"password":"GO0dBAdPassw0rD",
-	"serverCnt":1,
+	"serverCnt":2,
 	"SecurityKey":"passw0rd"
 }
