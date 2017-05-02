@@ -1,34 +1,18 @@
 [
 	{
-		"Server": "45.63.120.170",
-		"Server_port": 41620,
-		"Password": "GO0dBAdPassw0rD",
-		"Method": "chacha20",
-		"Remarks": "",
-		"Auth": true
+		"server": "45.32.139.229",
+		"server_port": 41620,
+		"password": "GO0dBAdPassw0rD",
+		"method": "chacha20",
+		"remarks": "",
+		"auth": true
 	},
 	{
-		"Server": "2001:19f0:7001:bbe:5400:ff:fe33:9578",
-		"Server_port": 41620,
-		"Password": "GO0dBAdPassw0rD",
-		"Method": "chacha20",
-		"Remarks": "",
-		"Auth": true
-	},
-	{
-		"Server": "45.32.136.49",
-		"Server_port": 41620,
-		"Password": "GO0dBAdPassw0rD",
-		"Method": "chacha20",
-		"Remarks": "",
-		"Auth": true
-	},
-	{
-		"Server": "2001:19f0:ac01:1d2:5400:ff:fe33:a451",
-		"Server_port": 41620,
-		"Password": "GO0dBAdPassw0rD",
-		"Method": "chacha20",
-		"Remarks": "",
-		"Auth": true
+		"server": "2001:19f0:ac01:10e:5400:ff:fe37:1d10",
+		"server_port": 41620,
+		"password": "GO0dBAdPassw0rD",
+		"method": "chacha20",
+		"remarks": "",
+		"auth": true
 	}
 ]

@@ -16,7 +16,7 @@ type ServerProvider interface {
 	Create() server.Server
 }
 
-var provider ServerProvider
+var Provider ServerProvider
 var mutex sync.Mutex
 var Servers = map[server.Server]bool{}
 
@@ -39,14 +39,14 @@ func AddServer(s server.Server) {
 func RegisterProvider(serverProvider ServerProvider) {
 	mutex.Lock()
 	defer mutex.Unlock()
-	provider = serverProvider
+	Provider = serverProvider
 }
 
 func CheckOutServerCount() {
 	requiredServerCount := int(util.Configs["serverCnt"].(float64))
 	for len(Servers) < requiredServerCount {
 		log.Println("Creating a new server...")
-		AddServer(provider.Create())
+		AddServer(Provider.Create())
 	}
 	for len(Servers) > requiredServerCount {
 		log.Println("Destroying needless server")
@@ -97,7 +97,6 @@ func JSON() []byte {
 		ssservers = append(ssservers, newSSserver(s.AddrV6().String()))
 	}
 	data, err := json.MarshalIndent(ssservers, "", "	")
-	str = by
 	if err != nil {
 		log.Fatalln("Error encoding SS server list to JSON ", err)
 	}

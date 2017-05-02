@@ -17,30 +17,42 @@ import "time"
 import "bytes"
 import "os"
 import "github.com/dynport/gossh"
+import "flag"
 
 var configFile = "vultr_config.json"
 var configs map[string]interface{}
 var apikey string
 
+var DCID string
+var VPSPLANID string
+var OSID string
+
 func init() {
 	configs = util.LoadConfig(configFile)
+
+	flag.StringVar(&DCID, "DCID", configs["creation"].(map[string]interface{})["DCID"].(string), "the data center ID")
+	flag.StringVar(&VPSPLANID, "VPSPLANID", configs["creation"].(map[string]interface{})["VPSPLANID"].(string), "the VPS plan ID")
+	flag.StringVar(&OSID, "OSID", configs["creation"].(map[string]interface{})["OSID"].(string), "the operating system ID")
+
 	apikey = configs["apikey"].(string)
 	serverProvider := &VultrServers{}
 	servers.RegisterProvider(serverProvider)
 
-	respData := requestToVultr("/v1/server/list?tag="+configs["creation"].(map[string]interface{})["tag"].(string), "GET", nil)
-	var serverList = map[string]interface{}{}
-	json.Unmarshal(respData, &serverList)
-	for index, data := range serverList {
-		serverInfo := data.(map[string]interface{})
-		s := &VultrServer{
-			Subid:    index,
-			IPv4:     net.ParseIP(serverInfo["main_ip"].(string)),
-			IPv6:     net.ParseIP(serverInfo["v6_main_ip"].(string)),
-			Password: serverInfo["default_password"].(string),
+	/*
+		respData := requestToVultr("/v1/server/list?tag="+configs["creation"].(map[string]interface{})["tag"].(string), "GET", nil)
+		var serverList = map[string]interface{}{}
+		json.Unmarshal(respData, &serverList)
+		for index, data := range serverList {
+			serverInfo := data.(map[string]interface{})
+			s := &VultrServer{
+				Subid:    index,
+				IPv4:     net.ParseIP(serverInfo["main_ip"].(string)),
+				IPv6:     net.ParseIP(serverInfo["v6_main_ip"].(string)),
+				Password: serverInfo["default_password"].(string),
+			}
+			servers.AddServer(s)
 		}
-		servers.AddServer(s)
-	}
+	*/
 }
 
 type VultrServers struct{}
@@ -97,6 +109,9 @@ func (v *VultrServer) Do(uri string, data []byte) {
 		}
 		time.Sleep(time.Second)
 		req, _ = http.NewRequest(method, "http://"+v.IPv4.String()+":41600"+uri, bytes.NewBuffer(data))
+		if method == "POST" {
+			req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+		}
 	}
 }
 
@@ -110,9 +125,11 @@ func (v *VultrServer) Status() int {
 		if err != nil {
 			log.Println("Error access Vultr for new server : ", err)
 		} else {
-			log.Println("Accessing too fase...")
+			log.Println("Accessing too fast...")
 		}
 		time.Sleep(time.Second)
+		req, err = http.NewRequest("GET", "https://api.vultr.com/v1/server/list?SUBID="+v.Subid, nil)
+		req.Header.Add("API-Key", apikey)
 	}
 	if resp.StatusCode != 200 {
 		return server.StateDestroyed
@@ -133,6 +150,11 @@ func (v *VultrServers) Create() server.Server {
 	for goodServerCreated := false; goodServerCreated == false; {
 		log.Println("Creating Vultr Server...")
 		creationConfig := configs["creation"].(map[string]interface{})
+
+		creationConfig["DCID"] = DCID
+		creationConfig["VPSPLANID"] = VPSPLANID
+		creationConfig["OSID"] = OSID
+
 		var form = url.Values{}
 		for index, value := range creationConfig {
 			form.Add(index, value.(string))
@@ -200,6 +222,11 @@ func requestToVultr(uri string, method string, data []byte) []byte {
 			log.Println("Accessing too fast...")
 		}
 		time.Sleep(time.Second)
+		req, err = http.NewRequest(method, "https://api.vultr.com"+uri, bytes.NewBuffer(data))
+		req.Header.Add("API-Key", apikey)
+		if method == "POST" {
+			req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+		}
 	}
 	if resp.StatusCode != 200 {
 		if resp.StatusCode == 412 {
@@ -207,7 +234,7 @@ func requestToVultr(uri string, method string, data []byte) []byte {
 			os.Stderr.Write(respData)
 			os.Stderr.Write([]byte{'\n'})
 		}
-		log.Fatalln("Server responded with code ", resp.StatusCode, " , which may be caused a change of API or Service tempororily unavailbale")
+		log.Panicln("Server responded with code ", resp.StatusCode, " , which may be caused a change of API or Service tempororily unavailbale")
 	}
 	respData, err := ioutil.ReadAll(resp.Body)
 	return respData

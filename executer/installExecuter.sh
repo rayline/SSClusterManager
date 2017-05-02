@@ -12,7 +12,7 @@ rm -rf ./shadowsocks-libev
 git clone https://github.com/shadowsocks/shadowsocks-libev.git
 
 cd shadowsocks-libev
-apt -y install --no-install-recommends build-essential autoconf libtool libssl-dev gawk debhelper dh-systemd init-system-helpers pkg-config asciidoc xmlto apg
+apt -y install --no-install-recommends build-essential autoconf libtool libssl-dev gawk debhelper dh-systemd init-system-helpers pkg-config asciidoc xmlto apg libpcre3-dev
 dpkg-buildpackage -b -us -uc -i
 cd ..
 sudo dpkg -i shadowsocks-libev*.deb
